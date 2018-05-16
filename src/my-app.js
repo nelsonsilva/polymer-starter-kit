@@ -22,6 +22,15 @@ import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './my-icons.js';
+import './shared-styles.js';
+
+import '@nuxeo/nuxeo-elements/nuxeo-elements.js';
+import { importHref } from './import-href.js';
+
+// Export Polymer and PolymerElement for 1.x and 2.x compat
+import { Polymer } from '@polymer/polymer/polymer-legacy.js';
+window.Polymer = Polymer;
+window.PolymerElement = PolymerElement;
 
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
@@ -73,6 +82,8 @@ class MyApp extends PolymerElement {
         }
       </style>
 
+      <nuxeo-connection id="nxcon" url="http://localhost:8080/nuxeo"></nuxeo-connection>
+
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
       </app-location>
 
@@ -84,9 +95,10 @@ class MyApp extends PolymerElement {
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar>Menu</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a name="view1" href="[[rootPath]]view1">View One</a>
-            <a name="view2" href="[[rootPath]]view2">View Two</a>
-            <a name="view3" href="[[rootPath]]view3">View Three</a>
+            <a name="p1" href="[[rootPath]]p1">Polymer 1</a>
+            <a name="p2" href="[[rootPath]]p2">Polymer 2</a>
+            <a name="p3" href="[[rootPath]]p3">Polymer 3</a>
+            <a name="lit" href="[[rootPath]]lit">LitElement</a>
           </iron-selector>
         </app-drawer>
 
@@ -100,10 +112,14 @@ class MyApp extends PolymerElement {
             </app-toolbar>
           </app-header>
 
-          <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
+          <iron-pages id="pages" selected="[[page]]" attr-for-selected="name" role="main">
             <my-view1 name="view1"></my-view1>
             <my-view2 name="view2"></my-view2>
             <my-view3 name="view3"></my-view3>
+            <p1-doc-reader name="p1"></p1-doc-reader>
+            <p2-doc-reader name="p2"></p2-doc-reader>
+            <p3-doc-reader name="p3"></p3-doc-reader>
+            <lit-doc-reader name="lit"></lit-doc-reader>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
         </app-header-layout>
@@ -135,8 +151,8 @@ class MyApp extends PolymerElement {
      // If no page was found in the route data, page will be an empty string.
      // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
-      this.page = 'view1';
-    } else if (['view1', 'view2', 'view3'].indexOf(page) !== -1) {
+      this.page = 'lit';
+    } else if (['p1', 'p2', 'p3', 'lit'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'view404';
@@ -154,17 +170,25 @@ class MyApp extends PolymerElement {
     // Note: `polymer build` doesn't like string concatenation in the import
     // statement, so break it up.
     switch (page) {
-      case 'view1':
-        import('./my-view1.js');
+      case 'p3':
+        import('./p3-doc-reader.js');
         break;
-      case 'view2':
-        import('./my-view2.js');
-        break;
-      case 'view3':
-        import('./my-view3.js');
+      case 'lit':
+        import('./lit-doc-reader.js');
         break;
       case 'view404':
         import('./my-view404.js');
+        break;
+      default:
+        const el = this.$.pages.selectedItem;
+        if (!el) {
+          return;
+        }
+        // check if page is already registered (vulcanized)
+        if (!(el instanceof PolymerElement)) {
+          var tag = el.tagName.toLowerCase();
+          importHref(`src/${tag}.html`, undefined, () => this.page = 'view404');
+        }
         break;
     }
   }

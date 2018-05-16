@@ -6,13 +6,14 @@
   "license": "BSD-3-Clause",
   "repository": "Polymer/polymer-starter-kit",
   "scripts": {
-    "start": "polymer serve",
+    "start": "polymer serve -H 0.0.0.0",
     "build": "polymer build",
     "lint": "polymer lint",
     "test": "polymer test",
     "test:integration": "polymer build # test that psk builds without error with the CLI"
   },
   "dependencies": {
+    "@nuxeo/nuxeo-elements": "^2.3.3-SNAPSHOT",
     "@polymer/app-layout": "^3.0.0",
     "@polymer/app-route": "^3.0.0",
     "@polymer/iron-flex-layout": "^3.0.0",
@@ -20,12 +21,15 @@
     "@polymer/iron-media-query": "^3.0.0",
     "@polymer/iron-pages": "^3.0.0",
     "@polymer/iron-selector": "^3.0.0",
+    "@polymer/lit-element": "^0.6.2",
     "@polymer/paper-icon-button": "^3.0.0",
     "@polymer/polymer": "^3.0.0",
-    "@webcomponents/webcomponentsjs": "^2.0.0"
+    "@webcomponents/html-imports": "^1.1.1",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "nuxeo": "^3.6.1"
   },
   "devDependencies": {
-    "polymer-cli": "^1.7.1",
+    "polymer-cli": "^1.8.0",
     "wct-browser-legacy": "^1.0.0"
   },
   "engines": {

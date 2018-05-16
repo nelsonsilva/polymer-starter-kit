@@ -6,7 +6,9 @@
   ],
   "extraDependencies": [
     "manifest.json",
+    "src/*.html",
     "node_modules/@webcomponents/webcomponentsjs/*.js",
+    "node_modules/@webcomponents/html-imports/html-imports.min.js",
     "!node_modules/@webcomponents/webcomponentsjs/gulpfile.js",
     "node_modules/@webcomponents/webcomponentsjs/bundles/*.js"
   ],
@@ -35,7 +37,7 @@
         "es2015"
       ],
       "js": {
-        "minify": true,
+        "minify": false,
         "transformModulesToAmd": true
       },
       "css": {

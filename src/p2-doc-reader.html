@@ -1,0 +1,46 @@
+<dom-module id="p2-doc-reader">
+  <template>
+    <style include="shared-styles"></style>
+
+    <nuxeo-document id="doc" auto doc-path="/default-domain/" response="{{document}}"></nuxeo-document>
+    <nuxeo-page-provider auto
+                     provider="advanced_document_content"
+                     params="[[_computeParams(document)]]"
+                     current-page="{{children}}">
+    </nuxeo-page-provider>
+
+    <div class="card">
+      <div class="circle">P2</div>
+      <h1>Polymer 2 - Doc Reader</h1>
+
+      <h2>[[document.title]]</h2>
+      <p>ID: [[document.uid]]</p>
+      <p>Repository: [[document.repository]]</p>
+      <p>State: [[document.state]]</p>
+      <h3>Contributors:</h3>
+      <ul>
+        <template is="dom-repeat" items="[[document.properties.dc:contributors]]" as="contributor">
+          <li>[[contributor]]</li>
+        </template>
+      </ul>
+
+      <h3>Children:</h3>
+      <ul>
+        <template is="dom-repeat" items="[[children]]" as="child">
+          <li>[[child.title]]</li>
+        </template>
+      </ul>
+    </div>
+  </template>
+
+  <script>
+    class DocReader extends PolymerElement { 
+      static get is() { return 'p2-doc-reader'; }
+      _computeParams(document) {
+        return document ? { ecm_parentId: this.document.uid } : {};
+      }
+    }
+
+    customElements.define(DocReader.is, DocReader);
+  </script>
+</dom-module>
